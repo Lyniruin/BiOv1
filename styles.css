@@ -187,10 +187,15 @@ figcaption {
 }
 
 .wide-figure img,
-.result-grid img {
+.result-grid img,
+.result-grid video {
   display: block;
   width: 100%;
   height: auto;
+}
+
+.result-grid video {
+  background: #000000;
 }
 
 .wide-figure img {
