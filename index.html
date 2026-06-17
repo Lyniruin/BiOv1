@@ -3,294 +3,253 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Hybrid Framework for Full-Body Musculoskeletal Control</title>
+    <title>Trajectory Optimization Framework for Musculoskeletal Control</title>
     <meta
       name="description"
-      content="A research project page on optimization, nonlinear programming, and learning-based control for full-body musculoskeletal models."
+      content="A project page introducing a current multibody trajectory optimization framework for musculoskeletal control."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Serif:wght@600;700&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <header class="site-header">
-      <a class="brand" href="#top" aria-label="Project home">
-        <span class="brand-mark"></span>
-        <span>Musculoskeletal Control</span>
-      </a>
-      <nav class="nav" aria-label="Primary navigation">
-        <a href="#motivation">Motivation</a>
-        <a href="#objectives">Objectives</a>
-        <a href="#method">Method</a>
-        <a href="#evaluation">Evaluation</a>
+    <header class="topbar">
+      <a class="brand" href="#top">Trajectory Optimization Framework</a>
+      <nav aria-label="Main navigation">
+        <a href="#overview">Overview</a>
+        <a href="#model">Model</a>
+        <a href="#optimizer">Optimizer</a>
+        <a href="#results">Results</a>
       </nav>
-      <a class="nav-button" href="assets/research-proposal.pdf">PDF</a>
     </header>
 
     <main id="top">
       <section class="hero">
-        <div class="hero-copy">
-          <p class="eyebrow">Research Proposal</p>
-          <h1>Hybrid Framework for Forward Control of Full-Body Musculoskeletal Models</h1>
-          <p class="lead">
-            A physics-constrained and optimization-driven framework for generating stable,
-            interpretable, and physiologically plausible human movement.
-          </p>
-          <div class="hero-actions">
-            <a class="primary-action" href="#method">Explore Framework</a>
-            <a class="secondary-action" href="assets/research-proposal.pdf">Download Proposal</a>
-          </div>
-        </div>
-        <div class="hero-visual" aria-label="Conceptual framework diagram">
-          <div class="motion-card main-card">
-            <span class="card-label">Input</span>
-            <strong>Muscle Activation</strong>
-            <p>Control signals, external contact, and subject-specific parameters</p>
-          </div>
-          <div class="flow-line line-one"></div>
-          <div class="motion-card model-card">
-            <span class="card-label">Model</span>
-            <strong>Differentiable Musculoskeletal Dynamics</strong>
-            <p>Kinematics, contact, force mapping, and nonlinear constraints</p>
-          </div>
-          <div class="flow-line line-two"></div>
-          <div class="motion-card output-card">
-            <span class="card-label">Output</span>
-            <strong>Whole-Body Motion</strong>
-            <p>Walking, squatting, balance recovery, and rehabilitation tasks</p>
-          </div>
+        <p class="kicker">Current Work</p>
+        <h1>Towards Motion Tracking: General Optimization Framework</h1>
+        <p class="lead">
+          A modular multibody trajectory optimization framework for musculoskeletal
+          control, supporting custom rigid-body models, inverse kinematics, inverse
+          dynamics, contact wrench mapping, multi-phase transcription, and GRF tracking.
+        </p>
+        <div class="hero-actions">
+          <a href="#overview">View Framework</a>
+          <a href="#results">See Tracking Results</a>
         </div>
       </section>
 
-      <section class="summary-band" aria-label="Research keywords">
-        <div>
-          <span>Musculoskeletal Modeling</span>
-          <span>Human Movement Control</span>
-          <span>Optimization</span>
-          <span>Nonlinear Programming</span>
-          <span>Physics-Constrained Learning</span>
-        </div>
-      </section>
-
-      <section class="section two-column" id="motivation">
-        <div>
-          <p class="section-kicker">Background</p>
-          <h2>Why Full-Body Musculoskeletal Control Is Hard</h2>
-        </div>
-        <div class="section-text">
-          <p>
-            Human movement emerges from neural control, muscle activation, muscle-tendon
-            force transmission, skeletal motion, postural stability, and interaction with the
-            environment. This process is high-dimensional, strongly nonlinear, and governed
-            by coupled dynamic, contact, and physiological constraints.
-          </p>
-          <p>
-            Existing optimization-based methods provide physical consistency and
-            interpretability, but are often computationally expensive and sensitive to
-            initialization. Learning-based controllers can support fast deployment and
-            adaptation, but may struggle with constraint satisfaction and biomechanical
-            plausibility. Differentiable dynamics offers a bridge between these two paradigms.
-          </p>
-        </div>
-      </section>
-
-      <section class="section" id="objectives">
-        <div class="section-heading">
-          <p class="section-kicker">Research Aim</p>
-          <h2>Build an Optimization-Supervised Control Pipeline</h2>
-          <p>
-            The project aims to connect muscle activation, muscle-tendon force transmission,
-            joint torque generation, whole-body motion, and external contact in a unified
-            computational framework.
-          </p>
-        </div>
-        <div class="objective-grid">
-          <article class="objective-card">
-            <span>01</span>
-            <h3>Differentiable Musculoskeletal Model</h3>
-            <p>
-              Support custom rigid-body dynamics, contact constraints, inverse dynamics, and
-              muscle-tendon force mapping.
-            </p>
-          </article>
-          <article class="objective-card">
-            <span>02</span>
-            <h3>Controllable Muscle-Tendon Complexity</h3>
-            <p>
-              Combine efficient axial elements with local Cosserat units in transition or
-              branching regions.
-            </p>
-          </article>
-          <article class="objective-card">
-            <span>03</span>
-            <h3>OCP/NLP Trajectory Optimization</h3>
-            <p>
-              Generate movements that satisfy dynamic, contact, and physiological constraints
-              while estimating internal variables.
-            </p>
-          </article>
-          <article class="objective-card">
-            <span>04</span>
-            <h3>Learning-Based Whole-Body Control</h3>
-            <p>
-              Use optimization as a physics supervisor to guide policies with residuals,
-              constraints, and feasible reference trajectories.
-            </p>
-          </article>
-        </div>
-      </section>
-
-      <section class="section method-section" id="method">
-        <div class="section-heading">
-          <p class="section-kicker">Methodology</p>
-          <h2>Three Connected Modules</h2>
+      <section class="section" id="overview">
+        <div class="section-title">
+          <span>01</span>
+          <h2>Framework Overview</h2>
         </div>
 
-        <div class="module-layout">
-          <aside class="module-tabs" aria-label="Method modules">
-            <button class="module-tab active" data-module="model">Differentiable Model</button>
-            <button class="module-tab" data-module="optimization">OCP / NLP Optimization</button>
-            <button class="module-tab" data-module="learning">Physics-Supervised Learning</button>
-          </aside>
-
-          <div class="module-panel active" id="module-model">
-            <h3>Differentiable Musculoskeletal Modelling</h3>
-            <p>
-              The musculoskeletal model is represented as a tree-structured multibody system
-              composed of rigid bone segments, joints, contact points, and muscle attachment
-              sites. It supports forward kinematics, inverse dynamics, forward dynamics,
-              contact modelling, and Jacobian-based force mapping.
-            </p>
-            <ul>
-              <li>Recursive rigid-body dynamics with RNEA and ABA</li>
-              <li>Differentiable computation with CasADi and JAX</li>
-              <li>Muscle-tendon force mapping for optimization and control</li>
-            </ul>
+        <div class="pipeline canvas">
+          <div class="pipeline-block input-block">
+            <div class="file-card">model.yaml</div>
+            <h3>Model Organization</h3>
+            <p>body, joint, marker, root, gravity</p>
           </div>
-
-          <div class="module-panel" id="module-optimization">
-            <h3>Physics-Constrained OCP/NLP Trajectory Optimization</h3>
-            <p>
-              The optimization framework registers generalized coordinates, velocities, joint
-              torques, muscle activations, contact forces, floating node positions, and reserve
-              torques into a unified variable pool. These variables can be assembled into
-              inverse kinematics, inverse dynamics, trajectory optimization, ground reaction
-              force tracking, and muscle-driven control problems.
-            </p>
-            <ul>
-              <li>Direct transcription and integration transcription</li>
-              <li>Modular variable, constraint, and cost blocks</li>
-              <li>Explicit and implicit dynamics formulations</li>
-            </ul>
-          </div>
-
-          <div class="module-panel" id="module-learning">
-            <h3>Physics-Constrained Learning-Based Control</h3>
-            <p>
-              Instead of using OCP/NLP outputs only as offline reference trajectories, the
-              optimization module acts as a physics supervisor during policy learning and
-              deployment. The controller learns fast state-to-control mappings, while the
-              optimization framework provides feasibility checks, dynamic residuals, contact
-              consistency constraints, and corrective feedback.
-            </p>
-            <ul>
-              <li>Reference trajectories from constrained optimization</li>
-              <li>Physics residuals and contact consistency feedback</li>
-              <li>Improved real-time performance, robustness, and generalization</li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      <section class="section timeline-section">
-        <div class="section-heading">
-          <p class="section-kicker">Preliminary Work</p>
-          <h2>Current Progress</h2>
-        </div>
-        <div class="timeline">
-          <div class="timeline-item">
-            <span></span>
-            <div>
-              <h3>Multibody Trajectory Optimization</h3>
-              <p>
-                Built a preliminary framework that discretizes continuous-time optimal control
-                problems into nonlinear programming problems.
-              </p>
+          <div class="arrow horizontal"></div>
+          <div class="pipeline-block core-block">
+            <div class="module-label">model module</div>
+            <div class="mini-grid">
+              <div><strong>FK</strong><span>object</span></div>
+              <div><strong>ID</strong><span>RNEA</span></div>
+              <div><strong>FD</strong><span>ABA</span></div>
             </div>
+            <p class="formula">[FK] obj = F(q)<br />[ID] tau = G(q, f, qdot, qddot)<br />[FD] qddot = J(q, qdot, f, tau)</p>
           </div>
-          <div class="timeline-item">
-            <span></span>
-            <div>
-              <h3>Motion, Torque, and GRF Tracking</h3>
-              <p>
-                Tested motion trajectory input, joint torque optimization, and ground reaction
-                force tracking under coupled contact and physical constraints.
-              </p>
-            </div>
+          <div class="arrow horizontal"></div>
+          <div class="pipeline-block contact-block">
+            <div class="file-card">force.csv</div>
+            <h3>Wrench Mapping</h3>
+            <p>(F, COP) -> (tau_xyz, f_xyz)</p>
           </div>
-          <div class="timeline-item">
-            <span></span>
-            <div>
-              <h3>Mixed Muscle-Tendon Branch Design</h3>
-              <p>
-                Proposed an initial muscle model design with active axial muscle elements,
-                passive tendon elements, local Cosserat transition regions, floating nodes, and
-                passive transverse connections.
-              </p>
+          <div class="pipeline-block data-block">
+            <div class="file-card">trial.npz</div>
+            <h3>Motion Data</h3>
+            <p>marker trajectories and experimental GRF</p>
+          </div>
+          <div class="arrow horizontal"></div>
+          <div class="pipeline-block solve-block">
+            <div class="module-label">run_IK</div>
+            <h3>Optimize IK Problem</h3>
+            <p>marker tracking -> joint angle trajectory</p>
+          </div>
+          <div class="arrow horizontal"></div>
+          <div class="pipeline-block solve-block">
+            <div class="module-label">run_ID</div>
+            <h3>RNEA</h3>
+            <p>joint angle + mapped wrench -> joint torque</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section split" id="model">
+        <div class="section-title">
+          <span>02</span>
+          <h2>Model Module</h2>
+        </div>
+        <div class="split-grid">
+          <div class="text-panel">
+            <h3>YAML-driven model construction</h3>
+            <p>
+              The model module parses a structured <code>model.yaml</code> file and organizes
+              the human model as bodies, joints, marker frames, root configuration, and
+              gravity. This makes the framework independent of a fixed model template and
+              suitable for rapid testing of custom rigid-body structures.
+            </p>
+            <ul>
+              <li>Body definitions with mass, center of mass, and inertia</li>
+              <li>Joint definitions with parent-child topology and transformations</li>
+              <li>Marker frames attached to body segments for IK tracking</li>
+              <li>Root and world-frame configuration for floating-base motion</li>
+            </ul>
+          </div>
+          <div class="diagram-card body-diagram" aria-label="Body joint marker diagram">
+            <div class="human-model">
+              <div class="segment head">Head</div>
+              <div class="segment torso">Torso</div>
+              <div class="segment pelvis">Pelvis</div>
+              <div class="segment arm left">Upper<br />Arm</div>
+              <div class="segment fore left">Fore<br />Arm</div>
+              <div class="segment hand left">Hand</div>
+              <div class="segment arm right">Upper<br />Arm</div>
+              <div class="segment fore right">Fore<br />Arm</div>
+              <div class="segment hand right">Hand</div>
+              <div class="segment thigh left">Thigh</div>
+              <div class="segment shank left">Shank</div>
+              <div class="segment foot left">Foot</div>
+              <div class="segment thigh right">Thigh</div>
+              <div class="segment shank right">Shank</div>
+              <div class="segment foot right">Foot</div>
+              <div class="base">Base</div>
+              <div class="world">World frame</div>
             </div>
           </div>
         </div>
       </section>
 
-      <section class="section evaluation-section" id="evaluation">
-        <div class="section-heading">
-          <p class="section-kicker">Evaluation</p>
-          <h2>Tasks, Metrics, and Expected Contributions</h2>
+      <section class="section" id="optimizer">
+        <div class="section-title">
+          <span>03</span>
+          <h2>Optimizer Module</h2>
         </div>
-        <div class="evaluation-grid">
-          <article>
-            <h3>Target Tasks</h3>
-            <p>Constrained motion tracking, walking, squatting, and balance recovery.</p>
-          </article>
-          <article>
-            <h3>Metrics</h3>
+
+        <div class="optimizer-grid">
+          <div class="canvas optimizer-card">
+            <div class="module-label">optimizer module</div>
+            <div class="opt-layout">
+              <div class="small-box">Parser</div>
+              <div class="small-box">Builder</div>
+              <div class="nlp-box">NLP<br />for one frame</div>
+              <div class="map-box">Map to whole period</div>
+              <div class="wide-box">Collocation</div>
+              <div class="settings-box">Solver Setting<br /><span>initials, bounds, costs</span></div>
+              <div class="solver-box">Solver</div>
+              <div class="decision-box">Decisions<br /><span>[x1, x2, ...]</span></div>
+            </div>
+          </div>
+
+          <div class="text-panel compact">
+            <h3>From one-frame NLP to full-period optimization</h3>
             <p>
-              Motion tracking error, GRF error, dynamics residual, contact violation, muscle
-              activation plausibility, control energy, perturbation recovery, and cross-task
-              generalization.
+              The optimizer separates problem definition from numerical transcription. A
+              parser and builder define variables, constraints, costs, bounds, and initial
+              values for a single frame. The framework then maps the problem to the full
+              movement period through collocation and solves the resulting nonlinear program.
             </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section methods">
+        <div class="method-box">
+          <div class="module-label">Transcription</div>
+          <div class="method-grid">
+            <div class="large-method">Multiple Shooting<br /><span>explicit, initial dependent</span></div>
+            <div>RK4</div>
+            <div class="large-method">Direct Collocation<br /><span>large scale</span></div>
+            <div>Back-Euler</div>
+            <div></div>
+            <div>Simpson</div>
+          </div>
+        </div>
+
+        <div class="method-box">
+          <div class="module-label">Multi-Phase</div>
+          <div class="phase-grid">
+            <div>Phase 1</div><div>Bck-el-dc</div>
+            <div>Phase 2</div><div>RK4-ms</div>
+            <div>Phase 3</div><div>RK-dc</div>
+            <div>...</div><div>...</div>
+          </div>
+        </div>
+
+        <div class="method-box contact">
+          <div class="module-label">Contact</div>
+          <p>Wrench-mapping: (F, COP) -> (tau_xyz, f_xyz)</p>
+          <p class="muted">Used to connect measured force plate data, contact points, and inverse dynamics constraints.</p>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-title">
+          <span>04</span>
+          <h2>Supported Tracking Problems</h2>
+        </div>
+        <div class="problem-grid">
+          <article>
+            <h3>Inverse Kinematics</h3>
+            <p>Optimize generalized coordinates by tracking marker trajectories from motion data.</p>
           </article>
           <article>
-            <h3>Baselines</h3>
-            <p>
-              Optimization-only methods, learning-only policies, policies without physics
-              supervision, and traditional Hill-type MTU models.
-            </p>
+            <h3>Inverse Dynamics</h3>
+            <p>Estimate joint torques with RNEA using joint states and mapped contact wrenches.</p>
           </article>
           <article>
-            <h3>Contributions</h3>
-            <p>
-              A differentiable full-body musculoskeletal modelling and OCP/NLP framework,
-              a controllable-complexity muscle-tendon model, and a hybrid control approach
-              with improved stability, interpretability, and generalization.
-            </p>
+            <h3>GRF Tracking</h3>
+            <p>Track experimental ground reaction forces with optimized contact forces.</p>
           </article>
+          <article>
+            <h3>Differentiable Contact</h3>
+            <p>Support contact constraints for coupling motion trajectories with physical interaction.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section results" id="results">
+        <div class="section-title">
+          <span>05</span>
+          <h2>Preliminary GRF Tracking Results</h2>
+        </div>
+        <p class="result-intro">
+          The current framework has been tested on motion trajectory input, joint torque
+          optimization, and ground reaction force tracking. The optimized contact forces
+          broadly follow experimental GRF profiles across vertical, anterior-posterior, and
+          medial-lateral directions.
+        </p>
+        <div class="result-grid">
+          <figure>
+            <img src="assets/grf-periodic.jpg" alt="GRF tracking over multiple gait cycles" />
+            <figcaption>Multi-cycle GRF tracking between experimental force and optimized contact force.</figcaption>
+          </figure>
+          <figure>
+            <img src="assets/grf-single-cycle.jpg" alt="GRF tracking over one gait cycle" />
+            <figcaption>Single-cycle view showing vertical, AP, and ML force tracking for both feet.</figcaption>
+          </figure>
         </div>
       </section>
     </main>
 
-    <footer class="site-footer">
-      <div>
-        <strong>Hybrid Framework for Full-Body Musculoskeletal Control</strong>
-        <p>Static project page prepared for research presentation and academic applications.</p>
-      </div>
-      <a href="#top">Back to top</a>
+    <footer>
+      <strong>Trajectory Optimization Framework for Musculoskeletal Control</strong>
+      <span>Model module · Optimizer module · Transcription · Multi-phase · Contact wrench mapping</span>
     </footer>
-
-    <script src="script.js"></script>
   </body>
 </html>
