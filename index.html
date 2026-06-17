@@ -20,9 +20,9 @@
     <header class="topbar">
       <a class="brand" href="#top">Trajectory Optimization Framework</a>
       <nav aria-label="Main navigation">
-        <a href="#overview">Overview</a>
-        <a href="#model">Model</a>
-        <a href="#optimizer">Optimizer</a>
+        <a href="#compile">Model Compile</a>
+        <a href="#rigid-body">Rigid Body</a>
+        <a href="#transcription">Transcription</a>
         <a href="#results">Results</a>
       </nav>
     </header>
@@ -32,201 +32,137 @@
         <p class="kicker">Current Work</p>
         <h1>Towards Motion Tracking: General Optimization Framework</h1>
         <p class="lead">
-          A modular multibody trajectory optimization framework for musculoskeletal
-          control, supporting custom rigid-body models, inverse kinematics, inverse
-          dynamics, contact wrench mapping, multi-phase transcription, and GRF tracking.
+          A modular trajectory optimization framework for musculoskeletal control. The
+          current implementation covers model compilation, rigid-body model definition,
+          problem transcription, multi-phase construction, contact wrench mapping, inverse
+          kinematics, inverse dynamics, and GRF tracking.
         </p>
         <div class="hero-actions">
-          <a href="#overview">View Framework</a>
+          <a href="#compile">View Framework</a>
           <a href="#results">See Tracking Results</a>
         </div>
       </section>
 
-      <section class="section" id="overview">
+      <section class="section" id="compile">
         <div class="section-title">
           <span>01</span>
-          <h2>Framework Overview</h2>
+          <h2>Model Compilation and IK/ID Pipeline</h2>
         </div>
-
-        <div class="pipeline canvas">
-          <div class="pipeline-block input-block">
-            <div class="file-card">model.yaml</div>
-            <h3>Model Organization</h3>
-            <p>body, joint, marker, root, gravity</p>
-          </div>
-          <div class="arrow horizontal"></div>
-          <div class="pipeline-block core-block">
-            <div class="module-label">model module</div>
-            <div class="mini-grid">
-              <div><strong>FK</strong><span>object</span></div>
-              <div><strong>ID</strong><span>RNEA</span></div>
-              <div><strong>FD</strong><span>ABA</span></div>
-            </div>
-            <p class="formula">[FK] obj = F(q)<br />[ID] tau = G(q, f, qdot, qddot)<br />[FD] qddot = J(q, qdot, f, tau)</p>
-          </div>
-          <div class="arrow horizontal"></div>
-          <div class="pipeline-block contact-block">
-            <div class="file-card">force.csv</div>
-            <h3>Wrench Mapping</h3>
-            <p>(F, COP) -> (tau_xyz, f_xyz)</p>
-          </div>
-          <div class="pipeline-block data-block">
-            <div class="file-card">trial.npz</div>
-            <h3>Motion Data</h3>
-            <p>marker trajectories and experimental GRF</p>
-          </div>
-          <div class="arrow horizontal"></div>
-          <div class="pipeline-block solve-block">
-            <div class="module-label">run_IK</div>
-            <h3>Optimize IK Problem</h3>
-            <p>marker tracking -> joint angle trajectory</p>
-          </div>
-          <div class="arrow horizontal"></div>
-          <div class="pipeline-block solve-block">
-            <div class="module-label">run_ID</div>
-            <h3>RNEA</h3>
-            <p>joint angle + mapped wrench -> joint torque</p>
-          </div>
+        <div class="text-panel intro-panel">
+          <h3>From model files and motion data to joint angles and torques</h3>
+          <p>
+            The framework compiles a YAML-defined musculoskeletal rigid-body model into
+            reusable kinematic and dynamic functions. Motion trajectories and contact force
+            inputs are then mapped into inverse kinematics and inverse dynamics problems.
+          </p>
         </div>
+        <figure class="wide-figure">
+          <img src="assets/model-compile.png" alt="Model compilation and IK ID pipeline" />
+          <figcaption>
+            Model compilation pipeline: model organization, FK/ID/FD function compilation,
+            wrench mapping, inverse kinematics, and inverse dynamics.
+          </figcaption>
+        </figure>
       </section>
 
-      <section class="section split" id="model">
+      <section class="section" id="rigid-body">
         <div class="section-title">
           <span>02</span>
-          <h2>Model Module</h2>
+          <h2>Rigid-Body Model Definition</h2>
         </div>
-        <div class="split-grid">
-          <div class="text-panel">
-            <h3>YAML-driven model construction</h3>
-            <p>
-              The model module parses a structured <code>model.yaml</code> file and organizes
-              the human model as bodies, joints, marker frames, root configuration, and
-              gravity. This makes the framework independent of a fixed model template and
-              suitable for rapid testing of custom rigid-body structures.
-            </p>
-            <ul>
-              <li>Body definitions with mass, center of mass, and inertia</li>
-              <li>Joint definitions with parent-child topology and transformations</li>
-              <li>Marker frames attached to body segments for IK tracking</li>
-              <li>Root and world-frame configuration for floating-base motion</li>
-            </ul>
-          </div>
-          <div class="diagram-card body-diagram" aria-label="Body joint marker diagram">
-            <div class="human-model">
-              <div class="segment head">Head</div>
-              <div class="segment torso">Torso</div>
-              <div class="segment pelvis">Pelvis</div>
-              <div class="segment arm left">Upper<br />Arm</div>
-              <div class="segment fore left">Fore<br />Arm</div>
-              <div class="segment hand left">Hand</div>
-              <div class="segment arm right">Upper<br />Arm</div>
-              <div class="segment fore right">Fore<br />Arm</div>
-              <div class="segment hand right">Hand</div>
-              <div class="segment thigh left">Thigh</div>
-              <div class="segment shank left">Shank</div>
-              <div class="segment foot left">Foot</div>
-              <div class="segment thigh right">Thigh</div>
-              <div class="segment shank right">Shank</div>
-              <div class="segment foot right">Foot</div>
-              <div class="base">Base</div>
-              <div class="world">World frame</div>
-            </div>
-          </div>
+        <div class="text-panel intro-panel">
+          <h3>Body, joint, marker frame, and world-frame organization</h3>
+          <p>
+            The rigid-body model is represented through bodies, joints, and marker frames.
+            Body definitions include mass properties, while joints define parent-child
+            transformations. Marker frames are attached to body segments for motion tracking,
+            and the floating base connects the model to the world frame.
+          </p>
         </div>
+        <figure class="wide-figure">
+          <img src="assets/rigid-body-model.png" alt="Rigid body model definition" />
+          <figcaption>
+            Rigid-body model definition and coordinate transforms among body, joint, marker,
+            base, and world frames.
+          </figcaption>
+        </figure>
       </section>
 
-      <section class="section" id="optimizer">
+      <section class="section" id="transcription">
         <div class="section-title">
           <span>03</span>
-          <h2>Optimizer Module</h2>
+          <h2>Problem Transcription and Optimizer Construction</h2>
         </div>
-
-        <div class="optimizer-grid">
-          <div class="canvas optimizer-card">
-            <div class="module-label">optimizer module</div>
-            <div class="opt-layout">
-              <div class="small-box">Parser</div>
-              <div class="small-box">Builder</div>
-              <div class="nlp-box">NLP<br />for one frame</div>
-              <div class="map-box">Map to whole period</div>
-              <div class="wide-box">Collocation</div>
-              <div class="settings-box">Solver Setting<br /><span>initials, bounds, costs</span></div>
-              <div class="solver-box">Solver</div>
-              <div class="decision-box">Decisions<br /><span>[x1, x2, ...]</span></div>
-            </div>
-          </div>
-
-          <div class="text-panel compact">
-            <h3>From one-frame NLP to full-period optimization</h3>
-            <p>
-              The optimizer separates problem definition from numerical transcription. A
-              parser and builder define variables, constraints, costs, bounds, and initial
-              values for a single frame. The framework then maps the problem to the full
-              movement period through collocation and solves the resulting nonlinear program.
-            </p>
-          </div>
+        <div class="text-panel intro-panel">
+          <h3>From one-frame NLP to whole-period optimization</h3>
+          <p>
+            The optimizer module separates parsing, problem building, transcription, and
+            solving. A one-frame nonlinear programming problem is mapped to the full motion
+            period through collocation or multiple shooting, with support for multi-phase
+            tasks and contact wrench constraints.
+          </p>
         </div>
+        <figure class="wide-figure">
+          <img src="assets/problem-transcription.png" alt="Problem transcription and optimizer construction" />
+          <figcaption>
+            Optimizer module: parser, builder, one-frame NLP construction, collocation,
+            solver settings, multi-phase transcription, and contact mapping.
+          </figcaption>
+        </figure>
       </section>
 
-      <section class="section methods">
-        <div class="method-box">
-          <div class="module-label">Transcription</div>
-          <div class="method-grid">
-            <div class="large-method">Multiple Shooting<br /><span>explicit, initial dependent</span></div>
-            <div>RK4</div>
-            <div class="large-method">Direct Collocation<br /><span>large scale</span></div>
-            <div>Back-Euler</div>
-            <div></div>
-            <div>Simpson</div>
-          </div>
+      <section class="section" id="dynamics">
+        <div class="section-title">
+          <span>04</span>
+          <h2>Transcription, Integration, and Dynamics Decoupling</h2>
         </div>
-
-        <div class="method-box">
-          <div class="module-label">Multi-Phase</div>
-          <div class="phase-grid">
-            <div>Phase 1</div><div>Bck-el-dc</div>
-            <div>Phase 2</div><div>RK4-ms</div>
-            <div>Phase 3</div><div>RK-dc</div>
-            <div>...</div><div>...</div>
-          </div>
+        <div class="text-panel intro-panel">
+          <h3>Decoupling integration choices from dynamics formulations</h3>
+          <p>
+            The framework distinguishes integration schemes, transcription methods, and
+            dynamics formulations. This design allows forward dynamics and inverse dynamics
+            constraints to be combined with multiple shooting or direct collocation while
+            maintaining physics consistency.
+          </p>
         </div>
-
-        <div class="method-box contact">
-          <div class="module-label">Contact</div>
-          <p>Wrench-mapping: (F, COP) -> (tau_xyz, f_xyz)</p>
-          <p class="muted">Used to connect measured force plate data, contact points, and inverse dynamics constraints.</p>
-        </div>
+        <figure class="wide-figure">
+          <img src="assets/dynamics-decoupling.png" alt="Transcription integration and dynamics decoupling" />
+          <figcaption>
+            Decoupling of integration, transcription, and dynamics: explicit/implicit
+            integration, multiple shooting, direct collocation, ABA, and RNEA.
+          </figcaption>
+        </figure>
       </section>
 
       <section class="section">
         <div class="section-title">
-          <span>04</span>
+          <span>05</span>
           <h2>Supported Tracking Problems</h2>
         </div>
         <div class="problem-grid">
           <article>
             <h3>Inverse Kinematics</h3>
-            <p>Optimize generalized coordinates by tracking marker trajectories from motion data.</p>
+            <p>Track marker trajectories and estimate generalized coordinates.</p>
           </article>
           <article>
             <h3>Inverse Dynamics</h3>
-            <p>Estimate joint torques with RNEA using joint states and mapped contact wrenches.</p>
+            <p>Use RNEA with joint states and mapped contact wrenches to estimate joint torques.</p>
           </article>
           <article>
             <h3>GRF Tracking</h3>
             <p>Track experimental ground reaction forces with optimized contact forces.</p>
           </article>
           <article>
-            <h3>Differentiable Contact</h3>
-            <p>Support contact constraints for coupling motion trajectories with physical interaction.</p>
+            <h3>Multi-Phase Optimization</h3>
+            <p>Combine different transcription and integration schemes across movement phases.</p>
           </article>
         </div>
       </section>
 
       <section class="section results" id="results">
         <div class="section-title">
-          <span>05</span>
-          <h2>Preliminary GRF Tracking Results</h2>
+          <span>06</span>
+          <h2>Preliminary Tracking Results</h2>
         </div>
         <p class="result-intro">
           The current framework has been tested on motion trajectory input, joint torque
@@ -237,11 +173,21 @@
         <div class="result-grid">
           <figure>
             <img src="assets/grf-periodic.jpg" alt="GRF tracking over multiple gait cycles" />
-            <figcaption>Multi-cycle GRF tracking between experimental force and optimized contact force.</figcaption>
+            <figcaption>
+              Multi-cycle GRF tracking between experimental force and optimized contact force.
+            </figcaption>
           </figure>
           <figure>
             <img src="assets/grf-single-cycle.jpg" alt="GRF tracking over one gait cycle" />
-            <figcaption>Single-cycle view showing vertical, AP, and ML force tracking for both feet.</figcaption>
+            <figcaption>
+              Single-cycle view showing vertical, AP, and ML force tracking for both feet.
+            </figcaption>
+          </figure>
+          <figure>
+            <img src="assets/comparison-mini-effort.png" alt="Optimization comparison with and without mini effort" />
+            <figcaption>
+              Joint trajectory and torque comparison with and without mini-effort regularization.
+            </figcaption>
           </figure>
         </div>
       </section>
@@ -249,7 +195,7 @@
 
     <footer>
       <strong>Trajectory Optimization Framework for Musculoskeletal Control</strong>
-      <span>Model module · Optimizer module · Transcription · Multi-phase · Contact wrench mapping</span>
+      <span>Model compilation · Rigid-body definition · Problem transcription · Dynamics decoupling · GRF tracking</span>
     </footer>
   </body>
 </html>
